@@ -1,18 +1,18 @@
 ---
-title: Thinking in React
+title: Pensando em React
 ---
 
 <Intro>
 
-React can change how you think about the designs you look at and the apps you build. When you build a user interface with React, you will first break it apart into pieces called *components*. Then, you will describe the different visual states for each of your components. Finally, you will connect your components together so that the data flows through them. In this tutorial, we’ll guide you through the thought process of building a searchable product data table with React.
+React pode mudar como você pensa nos designs que você vê e nos aplicativos que você constrói. Quando você constrói uma interface de usuário com o React, você primeiro quebrará em partes chamadas *componentes*. Em seguida, você descreverá os diferentes estados para cada um de seus componentes. Por fim, você conectará seus componentes para que os dados fluam por eles. Neste tutorial, vamos guiá-lo pelo processo de pensamento de construção de uma tabela de dados de produtos pesquisável com React.
 
 </Intro>
 
-## Start with the mockup {/*start-with-the-mockup*/}
+## Comece com o Mock {/*start-with-the-mockup*/}
 
-Imagine that you already have a JSON API and a mockup from a designer.
+Pense que você já tem uma API JSON e um mock de um designer.
 
-The JSON API returns some data that looks like this:
+A API JSON retorna alguns dados que parecem com isso:
 
 ```json
 [
@@ -25,25 +25,25 @@ The JSON API returns some data that looks like this:
 ]
 ```
 
-The mockup looks like this:
+O mock se parece com isso:
 
 <img src="/images/docs/s_thinking-in-react_ui.png" width="300" style={{margin: '0 auto'}} />
 
-To implement a UI in React, you will usually follow the same five steps.
+Para implementar a UI em React, você normalmente irá seguir os mesmos cinco passos.
 
-## Step 1: Break the UI into a component hierarchy {/*step-1-break-the-ui-into-a-component-hierarchy*/}
+## Passo 1: Separe a UI em uma hierarquia de componentes {/*step-1-break-the-ui-into-a-component-hierarchy*/}
 
-Start by drawing boxes around every component and subcomponent in the mockup and naming them. If you work with a designer, they may have already named these components in their design tool. Ask them!
+Comece desenhando retângulos ao redor de cada componente e subcomponente no mock e nomeando-os. Se estiver trabalhando com designers, eles podem já ter nomeado esses componentes em suas ferramentas de design. Pergunte a eles!
 
-Depending on your background, you can think about splitting up a design into components in different ways:
+Dependendo do seu conhecimento, você pode pensar como separar o design em componentes de diferentes maneiras:
 
-* **Programming**--use the same techniques for deciding if you should create a new function or object. One such technique is the [single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), that is, a component should ideally only do one thing. If it ends up growing, it should be decomposed into smaller subcomponents. 
-* **CSS**--consider what you would make class selectors for. (However, components are a bit less granular.)
-* **Design**--consider how you would organize the design's layers.
+* **Programação**--use as mesmas técnicas para decidir se você deve criar uma nova função ou objeto. Uma dessas técnicas é o [princípio da responsabilidade única](https://en.wikipedia.org/wiki/Single_responsibility_principle), ou seja, um componente deve, idealmente, fazer uma única coisa. Se ele acabar crescendo, deve ser decomposto em subcomponentes menores. 
+* **CSS**--considere o que você faria com os seletores de classe. (No entanto, os componentes são um pouco menos granulares.)
+* **Design**--considere como você organizaria as camadas do design.
 
-If your JSON is well-structured, you'll often find that it naturally maps to the component structure of your UI. That's because UI and data models often have the same information architecture--that is, the same shape. Separate your UI into components, where each component matches one piece of your data model.
+Se o seu JSON estiver bem estruturado, você geralmente encontrará que ele se encaixa naturalmente na estrutura de componentes da sua UI. Isso acontece porque a UI e os modelos de dados geralmente têm a mesma arquitetura de informações--ou seja, o mesmo formato. Separe sua UI em componentes, onde cada componente corresponde a uma parte do seu modelo de dados.
 
-There are five components on this screen:
+Existem cinco componentes nesta tela:
 
 <FullWidth>
 
@@ -51,19 +51,19 @@ There are five components on this screen:
 
 <img src="/images/docs/s_thinking-in-react_ui_outline.png" width="500" style={{margin: '0 auto'}} />
 
-1. `FilterableProductTable` (grey) contains the entire app.
-2. `SearchBar` (blue) receives the user input.
-3. `ProductTable` (lavender) displays and filters the list according to the user input.
-4. `ProductCategoryRow` (green) displays a heading for each category.
-5. `ProductRow`	(yellow) displays a row for each product.
+1. `FilterableProductTable` (cinza) contém a aplicação inteira.
+2. `SearchBar` (azul) recebe o input do usuário.
+3. `ProductTable` (lavanda) Exibe e filtra a lista de acordo com o input do usuário.
+4. `ProductCategoryRow` (verde) Exibe um cabeçalho para cada categoria.
+5. `ProductRow`	(amarelo) exibe uma linha para cada produto.
 
 </CodeDiagram>
 
 </FullWidth>
 
-If you look at `ProductTable` (lavender), you'll see that the table header (containing the "Name" and "Price" labels) isn't its own component. This is a matter of preference, and you could go either way. For this example, it is a part of `ProductTable` because it appears inside the `ProductTable`'s list. However, if this header grows to be complex (e.g., if you add sorting), you can move it into its own `ProductTableHeader` component.
+Se você olhar para `ProductTable` (lavanda), verá que o cabeçalho da tabela (contendo os rótulos "Name" e "Price") não é seu próprio componente. Isso é uma questão de preferência e você pode ir para qualquer direção. Para este exemplo, é parte de `ProductTable` porque aparece dentro da lista de `ProductTable`. No entanto, se esse cabeçalho crescer para ser complexo (por exemplo, se você adicionar ordenação), você pode movê-lo para seu próprio componente `ProductTableHeader`.
 
-Now that you've identified the components in the mockup, arrange them into a hierarchy. Components that appear within another component in the mockup should appear as a child in the hierarchy:
+Agora que você identificou os componentes no mock, organize-os em uma hierarquia. Os componentes que aparecem dentro de outro componente no mock devem aparecer como um filho na hierarquia:
 
 * `FilterableProductTable`
     * `SearchBar`
@@ -71,13 +71,13 @@ Now that you've identified the components in the mockup, arrange them into a hie
         * `ProductCategoryRow`
         * `ProductRow`
 
-## Step 2: Build a static version in React {/*step-2-build-a-static-version-in-react*/}
+## Passo 2: Construa uma versão estática em React {/*step-2-build-a-static-version-in-react*/}
 
-Now that you have your component hierarchy, it's time to implement your app. The most straightforward approach is to build a version that renders the UI from your data model without adding any interactivity... yet! It's often easier to build the static version first and add interactivity later. Building a static version requires a lot of typing and no thinking, but adding interactivity requires a lot of thinking and not a lot of typing.
+Agora que você tem uma hierarquia de componentes, é hora de implementar o seu app. O modo mais direto é construir uma versão que renderiza a UI do seu modelo de dados sem adicionar nenhuma interatividade... ainda! É mais fácil construir a versão estática primeiro e adicionar interatividade depois. Construir uma versão estática requer muita digitação e pouco pensamento, mas adicionar interatividade requer muito pensamento e não muita digitação.
 
-To build a static version of your app that renders your data model, you'll want to build [components](/learn/your-first-component) that reuse other components and pass data using [props.](/learn/passing-props-to-a-component) Props are a way of passing data from parent to child. (If you're familiar with the concept of [state](/learn/state-a-components-memory), don't use state at all to build this static version. State is reserved only for interactivity, that is, data that changes over time. Since this is a static version of the app, you don't need it.)
+Para construir uma versão estática do seu app que renderize o seu modelo de dados, você irá querer construir [componentes](/learn/your-first-component) que reutilizem outros componentes e passar dados usando [props.](/learn/passing-props-to-a-component) Props são uma maneira de passar dados do pai para o filho. [Se você está familiarizado com o conceito de [state](/learn/state-a-components-memory) (estado), não use state para construir essa versão estática. Estado é reservado apenas para interatividade, ou seja, dados que mudam ao longo do tempo. Como esta é uma versão estática do app, você não precisa dele.]
 
-You can either build "top down" by starting with building the components higher up in the hierarchy (like `FilterableProductTable`) or "bottom up" by working from components lower down (like `ProductRow`). In simpler examples, it’s usually easier to go top-down, and on larger projects, it’s easier to go bottom-up.
+Você pode construir tando de "cima para baixo", começando com a construção dos componentes mais altos na hierarquia (como `FilterableProductTable`), ou de "baixo para cima", trabalhando a partir dos componentes mais baixos (como `ProductRow`). Em exemplos mais simples, geralmente é mais fácil ir de cima para baixo, e em projetos maiores, é mais fácil ir de baixo para cima.
 
 <Sandpack>
 
@@ -146,7 +146,7 @@ function SearchBar() {
       <label>
         <input type="checkbox" />
         {' '}
-        Only show products in stock
+        Mostrar apenas produtos em estoque
       </label>
     </form>
   );
@@ -195,67 +195,68 @@ td {
 
 </Sandpack>
 
-(If this code looks intimidating, go through the [Quick Start](/learn/) first!)
+(Se esse código parecer intimidador, dê uma olhada no [Início Rápido](/learn/) primeiro!)
 
-After building your components, you'll have a library of reusable components that render your data model. Because this is a static app, the components will only return JSX. The component at the top of the hierarchy (`FilterableProductTable`) will take your data model as a prop. This is called _one-way data flow_ because the data flows down from the top-level component to the ones at the bottom of the tree.
+Depois de construir seus componentes, você terá uma biblioteca de componentes reutilizáveis que renderizam seu modelo de dados. Por esse ser um app estático, os componentes retornarão apenas JSX. O componente no topo da hierarquia (`FilterableProductTable`) receberá seu modelo de dados como uma prop. Isso é chamado de _fluxo de dados unidirecional_ porque os dados fluem do componente de nível superior para os componentes na parte inferior da árvore.
 
 <Pitfall>
 
-At this point, you should not be using any state values. That’s for the next step!
+A esta altura, você não deve estar usando nenhum valor de state. Isso é para o próximo passo!
 
 </Pitfall>
 
-## Step 3: Find the minimal but complete representation of UI state {/*step-3-find-the-minimal-but-complete-representation-of-ui-state*/}
+## Passo 3: Identifique a representação mínima, mas completa do estado da UI {/*step-3-find-the-minimal-but-complete-representation-of-ui-state*/}
 
-To make the UI interactive, you need to let users change your underlying data model. You will use *state* for this.
+Para deixar a UI interativa, você precisa permitir que os usuários alterem seu modelo de dados subjacente. Você usará *state* para isso.
 
-Think of state as the minimal set of changing data that your app needs to remember. The most important principle for structuring state is to keep it [DRY (Don't Repeat Yourself).](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) Figure out the absolute minimal representation of the state your application needs and compute everything else on-demand. For example, if you're building a shopping list, you can store the items as an array in state. If you want to also display the number of items in the list, don't store the number of items as another state value--instead, read the length of your array.
+Pense no estado como o conjunto mínimo de dados que sua aplicação precisa lembrar. O princípio mais importante para estruturar o estado é mantê-lo [DRY: Don't Repeat Yourself (Não repita a si mesmo).](https://pt.wikipedia.org/wiki/Don%27t_repeat_yourself) Descubra a representação mínima absoluta do estado que sua aplicação precisa e calcule tudo o mais sob demanda. Por exemplo, se você está construindo uma lista de compras, você pode armazenar os itens como um array no estado. Se você também quiser exibir o número de itens na lista, não armazene o número de itens como outro valor de estado - em vez disso, leia o comprimento do seu array.
 
-Now think of all of the pieces of data in this example application:
+Agora pense sobre todas as peças de dados neste exemplo de aplicação:
 
-1. The original list of products
-2. The search text the user has entered
-3. The value of the checkbox
-4. The filtered list of products
+1. A lista original de produtos
+2. O texto de busca que o usuário digitou
+3. O valor da checkbox
+4. A lista filtrada de produtos
 
-Which of these are state? Identify the ones that are not:
+Qual desses são state? Identifique os que não são:
 
-* Does it **remain unchanged** over time? If so, it isn't state.
-* Is it **passed in from a parent** via props? If so, it isn't state.
-* **Can you compute it** based on existing state or props in your component? If so, it *definitely* isn't state!
+* **Permanece inalterado** ao longo do tempo? Se sim, não é state.
+* É **passado de um pai** via props? Se sim, não é state.
+* **Você pode computá-lo** com base no estado ou props existentes em seu componente? Se sim, *definitivamente* não é state!
 
-What's left is probably state.
+O que sobrou provavelmente é state.
 
-Let's go through them one by one again:
+Vamos revisá-los um por um novamente:
 
-1. The original list of products is **passed in as props, so it's not state.** 
-2. The search text seems to be state since it changes over time and can't be computed from anything.
-3. The value of the checkbox seems to be state since it changes over time and can't be computed from anything.
-4. The filtered list of products **isn't state because it can be computed** by taking the original list of products and filtering it according to the search text and value of the checkbox.
+1. A lista original de produtos é **passada como props, então não é state.**
+2. O texto de busca parece ser state, pois mudará ao longo do tempo e não pode ser computado a partir de nada.
+3. O valor da checkbox parece ser state, pois mudará ao longo do tempo e não pode ser computado a partir de nada.
+4. A lista filtrada de produtos **não é state porque pode ser computada** pegando a lista original de produtos e filtrando-a de acordo com o texto de busca e o valor da checkbox.	
 
-This means only the search text and the value of the checkbox are state! Nicely done!
+Isso significa que apenas o texto de busca e o valor da checkbox são state! Muito bem!
 
 <DeepDive>
 
 #### Props vs State {/*props-vs-state*/}
 
-There are two types of "model" data in React: props and state. The two are very different:
+Existem dois tipos de "modelos" de dados no React: props e state. Os dois são muito diferentes:
 
-* [**Props** are like arguments you pass](/learn/passing-props-to-a-component) to a function. They let a parent component pass data to a child component and customize its appearance. For example, a `Form` can pass a `color` prop to a `Button`.
-* [**State** is like a component’s memory.](/learn/state-a-components-memory) It lets a component keep track of some information and change it in response to interactions. For example, a `Button` might keep track of `isHovered` state.
+* [**Props** são como argumentos que você passa](/learn/passing-props-to-a-component) para uma função. 
+Eles deixão o componente pai passar dados para o componente filho e customizar sua aparência. Por exemplo, um `Form` pode passar uma prop `color` para um `Button`.
+* [**State** é como a memória de um componente.](/learn/state-a-components-memory) Ele permite que um componente acompanhe algumas informações e as altere em resposta a interações. Por exemplo, um `Button` pode acompanhar o estado `isHovered`.
 
-Props and state are different, but they work together. A parent component will often keep some information in state (so that it can change it), and *pass it down* to child components as their props. It's okay if the difference still feels fuzzy on the first read. It takes a bit of practice for it to really stick!
+Props e state são diferentes, mas eles trabalham juntos. Um componente pai frequentemente manterá algumas informações no estado (para que possa alterá-lo) e *passá-lo* para componentes filhos como suas props. Tudo bem se a diferença ainda parecer confusa na primeira leitura. Leva um pouco de prática para realmente grudar!
 
 </DeepDive>
 
-## Step 4: Identify where your state should live {/*step-4-identify-where-your-state-should-live*/}
+## Passo 4: Identifique onde seu state deve viver {/*step-4-identify-where-your-state-should-live*/}
 
-After identifying your app’s minimal state data, you need to identify which component is responsible for changing this state, or *owns* the state. Remember: React uses one-way data flow, passing data down the component hierarchy from parent to child component. It may not be immediately clear which component should own what state. This can be challenging if you’re new to this concept, but you can figure it out by following these steps!
+Depois de identificar os dados mínimos de estado do seu aplicativo, você precisa identificar qual componente é responsável por alterar esse estado, ou *possui* o estado. Lembre-se: o React usa fluxo de dados unidirecional, passando dados da hierarquia de componentes do componente pai para o filho. Pode não ser imediatamente claro qual componente deve possuir qual estado. Isso pode ser desafiador se você é novo neste conceito, mas você pode descobrir seguindo estas etapas!
 
-For each piece of state in your application:
+Para cada pedaço de state em sua aplicação:
 
-1. Identify *every* component that renders something based on that state.
-2. Find their closest common parent component--a component above them all in the hierarchy.
+1. Identifique *cada* componente que renderize algo baseado em seu state. 
+2. Encontre o componente pai comum mais próximo-- um componente acima de todos na hierarquia.
 3. Decide where the state should live:
     1. Often, you can put the state directly into their common parent.
     2. You can also put the state into some component above their common parent.
